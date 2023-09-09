@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:user_app/Features/Autentication/presentation/view_model/cubits/authcubit/sign_up_cubit.dart';
+import 'package:user_app/Features/Autentication/presentation/view_model/cubits/authcubit/auth_cubit.dart';
 import 'package:user_app/Features/Autentication/presentation/views/widgets/custom_elevated_button.dart';
 import 'package:user_app/Features/Autentication/presentation/views/widgets/progress_dialog.dart';
 import 'package:user_app/core/app_routes.dart';

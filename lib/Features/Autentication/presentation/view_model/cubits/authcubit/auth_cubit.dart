@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:user_app/Features/Autentication/presentation/view_model/services.dart';
 import 'package:user_app/core/const.dart';
 
-part 'sign_up_state.dart';
+part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
@@ -68,8 +68,19 @@ class AuthCubit extends Cubit<AuthState> {
           email: email, password: password);
       currentfirebaseuser = firebaseuser.user!;
       print(currentfirebaseuser);
-
-      emit(AuthSuccess());
+      DatabaseReference driversref =
+          FirebaseDatabase.instance.ref().child("users");
+      driversref.child(firebaseuser.user!.uid).once().then((value) {
+        final snap = value.snapshot;
+        if (snap.value != null) {
+          currentfirebaseuser = firebaseuser.user;
+          emit(AuthSuccess());
+        } else {
+          firebaseAuth.signOut();
+          emit(AuthFailed(
+              errmessage: 'This email is registered with drivers app'));
+        }
+      });
     } catch (e) {
       if (e is FirebaseException || e is FirebaseAuthException) {
         emit(AuthFailed(errmessage: e.toString()));
