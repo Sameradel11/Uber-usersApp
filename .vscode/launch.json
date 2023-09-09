@@ -5,9 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "user_app",
+            "name": "Flutter",
+            "type": "dart",
             "request": "launch",
-            "type": "dart"
+            "program": "lib/core/main.dart"
+        },
+        {
+            "name": "user_app",
+            "program":"lib/core/main.dart",
+            "request": "launch",
+            "type": "dart",
+            
         },
         {
             "name": "user_app (profile mode)",

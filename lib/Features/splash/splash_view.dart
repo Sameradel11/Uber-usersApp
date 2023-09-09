@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:user_app/core/app_routes.dart';
@@ -18,7 +19,11 @@ class _SplashViewState extends State<SplashView> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      GoRouter.of(context).push(AppRoutes.signin);
+      if (FirebaseAuth.instance.currentUser == null) {
+        GoRouter.of(context).push(AppRoutes.signin);
+      } else {
+        GoRouter.of(context).push(AppRoutes.homeview);
+      }
     });
   }
 

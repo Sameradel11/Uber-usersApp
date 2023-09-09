@@ -64,8 +64,11 @@ class AuthCubit extends Cubit<AuthState> {
   signin({required String email, required String password}) async {
     try {
       emit(AuthLoading());
-      await firebaseAuth.signInWithEmailAndPassword(
+      final firebaseuser = await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
+      currentfirebaseuser = firebaseuser.user!;
+      print(currentfirebaseuser);
+
       emit(AuthSuccess());
     } catch (e) {
       if (e is FirebaseException || e is FirebaseAuthException) {
