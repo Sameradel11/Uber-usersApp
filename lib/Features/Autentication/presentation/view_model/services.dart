@@ -17,8 +17,7 @@ class AuthUsingFirebase {
       "email": email.trim(),
       "phone": phone
     };
-    DatabaseReference driversreference =
-        FirebaseDatabase.instance.ref().child("users");
+    DatabaseReference driversreference = FirebaseDatabase.instance.ref("users");
     driversreference.child(firebaseuser.user!.uid).set(drivermap);
     currentfirebaseuser = firebaseuser.user!;
   }

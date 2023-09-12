@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:user_app/Features/Autentication/presentation/views/signin.dart';
 import 'package:user_app/Features/Autentication/presentation/views/signup.dart';
-import 'package:user_app/Features/home/homeview.dart';
+import 'package:user_app/Features/home/presentation/views/homeview.dart';
 import 'package:user_app/Features/splash/splash_view.dart';
 
 class AppRoutes {

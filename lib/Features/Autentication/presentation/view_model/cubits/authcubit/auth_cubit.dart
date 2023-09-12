@@ -28,24 +28,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  savecardetails({required Map<String, String> cardetails}) {
-    try {
-      emit(AuthLoading());
-      DatabaseReference driversreference =
-          FirebaseDatabase.instance.ref().child("drivers");
-      driversreference
-          .child(currentfirebaseuser!.uid)
-          .child("car_details")
-          .set(cardetails);
-      emit(AuthSuccess());
-    } catch (e) {
-      if (e is FirebaseException || e is FirebaseAuthException) {
-        emit(AuthFailed(errmessage: e.toString()));
-      } else {
-        emit(AuthFailed(errmessage: "There is an error"));
-      }
-    }
-  }
+
 
   signout() {
     try {
