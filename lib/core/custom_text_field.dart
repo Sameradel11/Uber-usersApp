@@ -27,7 +27,6 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      
       textInputAction: action,
       obscureText: hidetext,
       readOnly: readonly,
@@ -38,7 +37,6 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       style: const TextStyle(fontSize: 18),
       decoration: InputDecoration(
-      
           label: label,
           prefix: prefix,
           errorBorder: OutlineInputBorder(
