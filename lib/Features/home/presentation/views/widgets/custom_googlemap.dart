@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:user_app/core/const.dart';
 
+// ignore: must_be_immutable
 class CustomGoogleMap extends StatefulWidget {
   CustomGoogleMap(
       {super.key, required this.mycompleter, required this.mapcontroller});
@@ -18,7 +19,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.sizeOf(context).height * 0.75,
+      height: MediaQuery.sizeOf(context).height,
       child: GoogleMap(
         myLocationEnabled: true,
         mapType: MapType.normal,

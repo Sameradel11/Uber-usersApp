@@ -7,10 +7,9 @@ import 'package:user_app/Features/Autentication/presentation/view_model/cubits/a
 import 'package:user_app/Features/home/models/usermodel.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/cubits/fetchdata/fetchdata_cubit.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/custom_googlemap.dart';
+import 'package:user_app/Features/home/presentation/views/widgets/custom_scroll_sheet.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/opendrawer.dart';
-import 'package:user_app/core/const.dart';
-import 'package:user_app/core/custom_text_field.dart';
 import 'package:user_app/core/functions.dart';
 
 class HomeView extends StatefulWidget {
@@ -66,20 +65,7 @@ class _HomeViewState extends State<HomeView> {
                   CustomGoogleMap(
                       mycompleter: mycontroller, mapcontroller: mapcontroller),
                   OpenDrawer(scfkey: scfkey),
-                  DraggableScrollableSheet(
-                    initialChildSize: 0.3,
-                    minChildSize: 0.2,
-                    maxChildSize: 0.9,
-                    builder: (BuildContext context,
-                        ScrollController scrollController) {
-                      return ListView(controller: scrollController, children: [
-                        MaterialButton(
-                          color: Colors.blue,
-                          onPressed: () {},
-                        ),
-                      ]);
-                    },
-                  )
+                  const CustomScrollSheet()
                 ]),
               ),
             );
