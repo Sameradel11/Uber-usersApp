@@ -61,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
                 drawer: MyDrawer(
                   user: user,
                 ),
-                body: Stack(children: [
+                body: Stack(alignment: Alignment.bottomCenter, children: [
                   CustomGoogleMap(
                       mycompleter: mycontroller, mapcontroller: mapcontroller),
                   OpenDrawer(scfkey: scfkey),

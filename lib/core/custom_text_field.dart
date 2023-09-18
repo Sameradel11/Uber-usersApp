@@ -7,19 +7,20 @@ class CustomTextField extends StatelessWidget {
       required this.label,
       this.prefix,
       this.onchange,
-      this.onsaved,
+      this.onsubmitted,
       this.ontap,
       this.type = TextInputType.text,
       this.readonly = false,
       this.hidetext = false,
-      this.action = TextInputAction.next});
+      this.action = TextInputAction.next, this.ontapoutside});
   final hidetext;
   final onchange;
-  final onsaved;
+  final onsubmitted;
   final TextEditingController? controller;
   final Text label;
   final prefix;
   final ontap;
+  final ontapoutside;
   final TextInputType type;
   final bool readonly;
   final TextInputAction action;
@@ -27,13 +28,14 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTapOutside: ontapoutside,
       textInputAction: action,
       obscureText: hidetext,
       readOnly: readonly,
       keyboardType: type,
       onTap: ontap,
       onChanged: onchange,
-      onSaved: onsaved,
+      onFieldSubmitted: onsubmitted,
       controller: controller,
       style: const TextStyle(fontSize: 18),
       decoration: InputDecoration(

@@ -18,14 +18,16 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    Firebase.initializeApp();
-    Timer(const Duration(seconds: 3), () {
+    Firebase.initializeApp().whenComplete(() {
+      Timer(const Duration(seconds: 3), () {
       if (FirebaseAuth.instance.currentUser == null) {
         GoRouter.of(context).push(AppRoutes.signin);
       } else {
         GoRouter.of(context).push(AppRoutes.homeview);
       }
     });
+    });
+    
   }
 
   @override
