@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:user_app/core/app_routes.dart';
@@ -18,16 +17,13 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    Firebase.initializeApp().whenComplete(() {
-      Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       if (FirebaseAuth.instance.currentUser == null) {
         GoRouter.of(context).push(AppRoutes.signin);
       } else {
         GoRouter.of(context).push(AppRoutes.homeview);
       }
     });
-    });
-    
   }
 
   @override

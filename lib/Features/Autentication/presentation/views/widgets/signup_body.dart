@@ -12,7 +12,6 @@ import 'package:user_app/core/const.dart';
 import 'package:user_app/core/functions.dart';
 import 'package:user_app/core/style.dart';
 
-
 class SignUpBody extends StatefulWidget {
   const SignUpBody({
     super.key,

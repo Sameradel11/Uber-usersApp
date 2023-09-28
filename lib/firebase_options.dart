@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     projectId: 'uber-clone-c809d',
     databaseURL: 'https://uber-clone-c809d-default-rtdb.firebaseio.com',
     storageBucket: 'uber-clone-c809d.appspot.com',
-    iosClientId: '587050558198-rqkfs6j38dk8dq27e2ghiosk3md5u9ce.apps.googleusercontent.com',
+    iosClientId:
+        '587050558198-rqkfs6j38dk8dq27e2ghiosk3md5u9ce.apps.googleusercontent.com',
     iosBundleId: 'com.example.userApp',
   );
 
@@ -81,7 +82,8 @@ class DefaultFirebaseOptions {
     projectId: 'uber-clone-c809d',
     databaseURL: 'https://uber-clone-c809d-default-rtdb.firebaseio.com',
     storageBucket: 'uber-clone-c809d.appspot.com',
-    iosClientId: '587050558198-6d71rivgv11odbsfc3t0mg2jteflkjmk.apps.googleusercontent.com',
+    iosClientId:
+        '587050558198-6d71rivgv11odbsfc3t0mg2jteflkjmk.apps.googleusercontent.com',
     iosBundleId: 'com.example.userApp.RunnerTests',
   );
 }

@@ -5,8 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:user_app/Features/home/models/usermodel.dart';
 import 'package:user_app/core/const.dart';
-
-part 'fetchdata_state.dart';
+part 'fetchuserdata_state.dart';
 
 class FetchdataCubit extends Cubit<FetchdataState> {
   static datacubit(context) {
@@ -35,4 +34,6 @@ class FetchdataCubit extends Cubit<FetchdataState> {
       }
     }
   }
+
+
 }

@@ -8,7 +8,8 @@ import 'package:user_app/firebase_options.dart';
 
 void main() async {
   runApp(const DriverApp());
-  Firebase.initializeApp(
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Bloc.observer = Observer();

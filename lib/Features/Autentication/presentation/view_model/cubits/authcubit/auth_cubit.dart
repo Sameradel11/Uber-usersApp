@@ -28,8 +28,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-
-
   signout() {
     try {
       emit(AuthLoading());

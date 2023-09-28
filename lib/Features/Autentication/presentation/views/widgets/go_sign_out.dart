@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:user_app/core/app_routes.dart';
 import 'package:user_app/core/style.dart';
+
 class GoSignUp extends StatelessWidget {
   const GoSignUp({
     super.key,

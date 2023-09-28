@@ -5,8 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:user_app/Features/googlemap/presentation/viewmodel/location/location_cubit.dart';
 import 'package:user_app/Features/home/models/usermodel.dart';
-import 'package:user_app/Features/home/presentation/viewmodel/fetchdata/fetchdata_cubit.dart';
 import 'package:user_app/Features/googlemap/presentation/views/custom_googlemap.dart';
+import 'package:user_app/Features/home/presentation/viewmodel/fetchdata/fetchuserdata_cubit.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/custom_scroll_sheet.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/opendrawer.dart';
@@ -72,15 +72,19 @@ class _HomeViewState extends State<HomeView> {
                 drawer: MyDrawer(
                   user: user,
                 ),
-                body: Stack(alignment: Alignment.bottomCenter, children: [
-                  CustomGoogleMap(
-                      mycompleter: mycontroller, mapcontroller: mapcontroller),
-                  OpenDrawer(scfkey: scfkey),
-                  CustomScrollSheet(
-                    pickupcontroller: pickupcontroller,
-                    destinationcontroller: destinationcontroller,
-                  )
-                ]),
+                body: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    CustomGoogleMap(
+                        mycompleter: mycontroller,
+                        mapcontroller: mapcontroller),
+                    OpenDrawer(scfkey: scfkey),
+                    CustomScrollSheet(
+                      pickupcontroller: pickupcontroller,
+                      destinationcontroller: destinationcontroller,
+                    )
+                  ],
+                ),
               ),
             );
           },

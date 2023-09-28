@@ -1,3 +1,1 @@
-class UserLocation {
-  
-}
+class UserLocation {}

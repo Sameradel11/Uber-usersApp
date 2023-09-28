@@ -12,7 +12,10 @@ final class LocationSuccess extends LocationState {
   final String locality;
   final LatLng currentlatlang;
 
-  LocationSuccess({required this.street, required this.locality, required this.currentlatlang});
+  LocationSuccess(
+      {required this.street,
+      required this.locality,
+      required this.currentlatlang});
 }
 
 final class LocationFailure extends LocationState {

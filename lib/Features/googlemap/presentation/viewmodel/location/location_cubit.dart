@@ -39,4 +39,5 @@ class LocationCubit extends Cubit<LocationState> {
     emit(LocationSuccess(
         street: street, locality: locality, currentlatlang: currentlatlang));
   }
+
 }

@@ -9,6 +9,7 @@ class AppRoutes {
   static const String homeview = "/homeview";
   static const String signin = '/signin';
   static const String signup = '/signup';
+  static const String search = '/search';
 
   static final routes = GoRouter(routes: [
     GoRoute(path: splashview, builder: (context, state) => const SplashView()),

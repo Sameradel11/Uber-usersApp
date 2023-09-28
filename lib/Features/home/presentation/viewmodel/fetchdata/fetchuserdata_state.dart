@@ -1,4 +1,4 @@
-part of 'fetchdata_cubit.dart';
+part of 'fetchuserdata_cubit.dart';
 
 @immutable
 sealed class FetchdataState {
