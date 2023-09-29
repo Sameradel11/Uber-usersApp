@@ -20,13 +20,18 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   @override
   void initState() {
     super.initState();
-    // TODO: implement initState
   }
 
   @override
   Widget build(BuildContext context) {
     double bottompadding = MediaQuery.sizeOf(context).height * 0.2;
-    return BlocBuilder<LocationCubit, LocationState>(
+    return BlocConsumer<LocationCubit, LocationState>(
+      listener: (BuildContext context, LocationState state) {
+        if (state is GetLatlanglocationSuccess) {
+          BlocProvider.of<LocationCubit>(context)
+              .animatecamera(state.latLng, widget.mycompleter);
+        }
+      },
       builder: (context, state) {
         LocationCubit cubit = LocationCubit.get(context);
         return SizedBox(
@@ -40,8 +45,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
             initialCameraPosition: kGooglePlex,
             onMapCreated: (GoogleMapController controller) async {
               widget.mycompleter.complete(controller);
-              widget.mapcontroller = controller;
-              await cubit.getcurrentlocation(controller);
+              await cubit.getcurrentlocation(widget.mycompleter);
             },
           ),
         );

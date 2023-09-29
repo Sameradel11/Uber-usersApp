@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:user_app/Features/googlemap/presentation/viewmodel/location/location_cubit.dart';
+import 'package:user_app/Features/home/models/autocompletelocation.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/autocompelte/autocomplete_cubit.dart';
+import 'package:user_app/Features/home/presentation/views/widgets/location_list_tile.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/text_row.dart';
 import 'package:user_app/core/functions.dart';
 import 'package:user_app/core/style.dart';
@@ -21,7 +24,7 @@ class CustomScrollSheet extends StatefulWidget {
 class _CustomScrollSheetState extends State<CustomScrollSheet> {
   DraggableScrollableController sheetcontroller =
       DraggableScrollableController();
-
+  List<AutoCompleteModel> locations = [];
   @override
   Widget build(BuildContext context) {
     sheetcontroller.addListener(
@@ -37,6 +40,7 @@ class _CustomScrollSheetState extends State<CustomScrollSheet> {
             showtoast(state.errmessage, context);
           } else if (state is AutocompleteSuccess) {
             showtoast("data retreived successfully", context);
+            locations = state.locations;
           }
         },
         builder: (context, state) {
@@ -54,15 +58,7 @@ class _CustomScrollSheetState extends State<CustomScrollSheet> {
                   child: ListView(
                     controller: scrollController,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 150.0, vertical: 8.0),
-                        child: Container(
-                          height: 5,
-                          width: 5,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
+                      const Handler(),
                       const SizedBox(
                         height: 5,
                       ),
@@ -88,8 +84,31 @@ class _CustomScrollSheetState extends State<CustomScrollSheet> {
                       ),
                       const SizedBox(height: 20),
                       state is AutocompleteLoading
-                          ? const CircularProgressIndicator()
-                          : const   SizedBox(),
+                          ? const Center(child: CircularProgressIndicator())
+                          : const SizedBox(),
+                      state is AutocompleteLoading
+                          ? const SizedBox()
+                          : ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: ((context, index) => Container(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<LocationCubit>(context)
+                                            .getlatlangfromplaceid(
+                                                locations[index].placid);
+                                      },
+                                      child: LocationListTile(
+                                          location: locations[index]),
+                                    ),
+                                  )),
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      const SizedBox(
+                                height: 10,
+                              ),
+                              itemCount: locations.length,
+                            ),
                     ],
                   ),
                 ),
@@ -107,8 +126,24 @@ class _CustomScrollSheetState extends State<CustomScrollSheet> {
           duration: const Duration(milliseconds: 300), curve: Curves.linear);
       widget.pickupcontroller.selection = TextSelection(
           baseOffset: 0, extentOffset: widget.pickupcontroller.text.length);
-    } else {
-      sheetcontroller.reset();
     }
+  }
+}
+
+class Handler extends StatelessWidget {
+  const Handler({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 150.0, vertical: 8.0),
+      child: Container(
+        height: 5,
+        width: 5,
+        color: Colors.grey.shade500,
+      ),
+    );
   }
 }

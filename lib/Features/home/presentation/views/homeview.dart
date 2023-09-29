@@ -21,7 +21,8 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   GoogleMapController? mapcontroller;
-  final mycontroller = Completer();
+  final Completer<GoogleMapController> mycontroller =
+      Completer<GoogleMapController>();
   late FToast fToast;
   UserModel? user;
   GlobalKey<ScaffoldState> scfkey = GlobalKey<ScaffoldState>();
@@ -56,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
           }),
           BlocListener<LocationCubit, LocationState>(
               listener: (context, state) {
-            if (state is LocationSuccess) {
+            if (state is Currentlocationsuccess) {
               showtoast("Location Get Successfully", context);
               pickupcontroller.text = "${state.street} ${state.locality}";
             } else if (state is LocationFailure) {

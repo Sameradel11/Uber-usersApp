@@ -32,6 +32,8 @@ class AutocompleteCubit extends Cubit<AutocompleteState> {
       }
     } on DioException catch (e) {
       emit(AutocompleFailed(errmessage: e.message.toString()));
+    } catch (e) {
+      emit(AutocompleFailed(errmessage: e.toString()));
     }
   }
 }

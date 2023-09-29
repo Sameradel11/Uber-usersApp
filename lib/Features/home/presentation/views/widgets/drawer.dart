@@ -48,17 +48,17 @@ class MyDrawer extends StatelessWidget {
                               backgroundImage:
                                   AssetImage('Assets/images/profile.jpg'),
                             ),
-                            CustomListTile(
+                            UserInfoListTile(
                               text: user!.name,
                               ontap: () {},
                               icon: Icons.person,
                             ),
-                            CustomListTile(
+                            UserInfoListTile(
                               text: user!.email,
                               ontap: () {},
                               icon: Icons.email,
                             ),
-                            CustomListTile(
+                            UserInfoListTile(
                               text: user!.phone,
                               ontap: () {},
                               icon: Icons.phone,
@@ -74,17 +74,17 @@ class MyDrawer extends StatelessWidget {
                         ),
                         Column(
                           children: [
-                            CustomListTile(
+                            UserInfoListTile(
                                 text: 'History',
                                 ontap: () {},
                                 icon: Icons.history),
-                            CustomListTile(
+                            UserInfoListTile(
                                 text: 'Profile',
                                 ontap: () {},
                                 icon: Icons.person),
-                            CustomListTile(
+                            UserInfoListTile(
                                 text: 'About', ontap: () {}, icon: Icons.info),
-                            CustomListTile(
+                            UserInfoListTile(
                                 text: 'SignOut',
                                 ontap: () {
                                   BlocProvider.of<AuthCubit>(context).signout();

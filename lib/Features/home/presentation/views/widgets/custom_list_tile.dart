@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:user_app/core/style.dart';
 
-class CustomListTile extends StatelessWidget {
-  const CustomListTile(
+class UserInfoListTile extends StatelessWidget {
+  const UserInfoListTile(
       {super.key, required this.text, required this.ontap, required this.icon});
   final String text;
   final void Function()? ontap;
