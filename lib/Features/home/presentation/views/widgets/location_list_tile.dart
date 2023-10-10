@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:user_app/Features/googlemap/presentation/viewmodel/location/location_cubit.dart';
 import 'package:user_app/Features/home/models/autocompletelocation.dart';
+import 'package:user_app/core/functions.dart';
 import 'package:user_app/core/style.dart';
+
 class LocationListTile extends StatelessWidget {
   const LocationListTile({
     super.key,
     required this.location,
+    required this.sheetcontroller,
   });
 
   final AutoCompleteModel location;
-
+  final sheetcontroller;
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        BlocProvider.of<LocationCubit>(context)
+            .getlatlangfromplaceid(location.placid);
+        animateto(0.15, sheetcontroller);
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       minVerticalPadding: 0,
       leading: Container(
         decoration: BoxDecoration(

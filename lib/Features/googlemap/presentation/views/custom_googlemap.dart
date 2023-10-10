@@ -43,10 +43,17 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
             myLocationEnabled: true,
             mapType: MapType.normal,
             initialCameraPosition: kGooglePlex,
+            markers: {
+              Marker(
+                  markerId: const MarkerId('marker2'),
+                  position: state is GetLatlanglocationSuccess
+                      ? state.latLng
+                      : const LatLng(0, 0))
+            },
             onMapCreated: (GoogleMapController controller) async {
               widget.mycompleter.complete(controller);
               await cubit.getcurrentlocation(widget.mycompleter);
-            },
+            },  
           ),
         );
       },

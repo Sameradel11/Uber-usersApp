@@ -31,6 +31,7 @@ class _HomeViewState extends State<HomeView> {
 
   final TextEditingController pickupcontroller = TextEditingController();
   final TextEditingController destinationcontroller = TextEditingController();
+  bool locationisfrom = true;
   @override
   void initState() {
     super.initState();
@@ -80,10 +81,25 @@ class _HomeViewState extends State<HomeView> {
                         mycompleter: mycontroller,
                         mapcontroller: mapcontroller),
                     OpenDrawer(scfkey: scfkey),
-                    CustomScrollSheet(
-                      pickupcontroller: pickupcontroller,
-                      destinationcontroller: destinationcontroller,
-                    )
+                    locationisfrom
+                        ? CustomScrollSheet(
+                            textcontroller: pickupcontroller,
+                            destinationcontroller: destinationcontroller,
+                            labeltext: 'Pick up Location',
+                            hinttext: 'From',
+                            onsubmit: (value) {
+                              locationisfrom = false;
+                              setState(() {});
+                              pickupcontroller.clear();
+                            },
+                          )
+                        : CustomScrollSheet(
+                            textcontroller: destinationcontroller,
+                            destinationcontroller: destinationcontroller,
+                            labeltext: 'Destination',
+                            hinttext: 'To',
+                            onsubmit: (value) {},
+                          )
                   ],
                 ),
               ),

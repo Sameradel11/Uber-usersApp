@@ -29,3 +29,17 @@ showtoast(String text, BuildContext context) {
       ),
       toastDuration: const Duration(seconds: 2));
 }
+
+void animateto(double size, controller) {
+  controller.animateTo(size,
+      duration: const Duration(milliseconds: 300), curve: Curves.linear);
+}
+
+void changeFocus(
+    bool hasfocus, sheetcontroller, TextEditingController controller) {
+  if (hasfocus) {
+    animateto(1, sheetcontroller);
+    controller.selection =
+        TextSelection(baseOffset: 0, extentOffset: controller.text.length);
+  }
+}

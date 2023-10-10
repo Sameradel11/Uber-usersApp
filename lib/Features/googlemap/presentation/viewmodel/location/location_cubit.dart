@@ -18,6 +18,7 @@ class LocationCubit extends Cubit<LocationState> {
   }
 
   Future<void> getcurrentlocation(controller) async {
+    
     try {
       emit(LocationLoading());
       Position currentposition = await Geolocator.getCurrentPosition(
