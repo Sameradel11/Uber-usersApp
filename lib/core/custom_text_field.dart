@@ -17,7 +17,8 @@ class CustomTextField extends StatelessWidget {
       this.hidetext = false,
       this.action = TextInputAction.next,
       this.ontapoutside,
-      this.hint});
+      this.hint,
+      this.textcolor = Colors.white});
   final hidetext;
   final onchange;
   final onsubmitted;
@@ -30,6 +31,7 @@ class CustomTextField extends StatelessWidget {
   final bool readonly;
   final TextInputAction action;
   final hint;
+  final Color textcolor;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class CustomTextField extends StatelessWidget {
       onChanged: onchange,
       onFieldSubmitted: onsubmitted,
       controller: controller,
-      style: const TextStyle(fontSize: 18, color: Colors.black),
+      style: TextStyle(fontSize: 18, color: textcolor),
       decoration: InputDecoration(
           hintText: hint,
           label: label,

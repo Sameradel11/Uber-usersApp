@@ -7,7 +7,7 @@ import 'package:user_app/Features/home/models/usermodel.dart';
 import 'package:user_app/Features/googlemap/presentation/views/custom_googlemap.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/autocompelte/locationcubit.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/fetchdata/fetchuserdata_cubit.dart';
-import 'package:user_app/Features/home/presentation/views/widgets/custom_scroll_sheet.dart';
+import 'package:user_app/Features/home/presentation/views/widgets/destination_custom_scroll_sheet.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/opendrawer.dart';
 import 'package:user_app/core/functions.dart';
@@ -36,9 +36,8 @@ class _HomeViewState extends State<HomeView> {
   final TextEditingController pickupcontroller = TextEditingController();
   final TextEditingController destinationcontroller = TextEditingController();
 
-  bool locationisfrom = true;
-
-  List<LatLng> triplatlang = [];
+  late List<Widget> scrollsheets;
+  int sheetindex = 0;
   @override
   void initState() {
     super.initState();
@@ -76,6 +75,27 @@ class _HomeViewState extends State<HomeView> {
         ],
         child: BlocBuilder<FetchdataCubit, FetchdataState>(
           builder: (context, state) {
+            scrollsheets = [
+              CustomScrollSheetDestination(
+                textcontroller: pickupcontroller,
+                destinationcontroller: destinationcontroller,
+                labeltext: 'Destination',
+                hinttext: 'To Where',
+                onclicked: () {
+                  sheetindex = 1;
+                  setState(() {});
+                  BlocProvider.of<LocationCubit>(context)
+                      .getcurrentlocation(mycontroller);
+                },
+              ),
+              CustomScrollSheetDestination(
+                textcontroller: destinationcontroller,
+                destinationcontroller: destinationcontroller,
+                labeltext: 'Pick up Location',
+                hinttext: 'From',
+                onclicked: () {},
+              )
+            ];
             return SafeArea(
               child: Scaffold(
                 key: scfkey,
@@ -89,25 +109,7 @@ class _HomeViewState extends State<HomeView> {
                         mycompleter: mycontroller,
                         mapcontroller: mapcontroller),
                     OpenDrawer(scfkey: scfkey),
-                    locationisfrom
-                        ? CustomScrollSheet(
-                            textcontroller: pickupcontroller,
-                            destinationcontroller: destinationcontroller,
-                            labeltext: 'Destination',
-                            hinttext: 'To',
-                            onsubmit: (value) {
-                              locationisfrom = false;
-                              setState(() {});
-                              pickupcontroller.clear();
-                            },
-                          )
-                        : CustomScrollSheet(
-                            textcontroller: destinationcontroller,
-                            destinationcontroller: destinationcontroller,
-                            labeltext: 'Pick up Location',
-                            hinttext: 'From',
-                            onsubmit: (value) {},
-                          )
+                    scrollsheets[sheetindex]
                   ],
                 ),
               ),

@@ -7,14 +7,13 @@ class CustomElevatedButton extends StatelessWidget {
   final ontap;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      height: 40,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 80),
       child: ElevatedButton(
           style: ButtonStyle(
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12))),
-              backgroundColor: MaterialStateProperty.all(Colors.blue.shade800)),
+              backgroundColor: MaterialStateProperty.all(Colors.grey.shade700)),
           onPressed: ontap,
           child: child),
     );
