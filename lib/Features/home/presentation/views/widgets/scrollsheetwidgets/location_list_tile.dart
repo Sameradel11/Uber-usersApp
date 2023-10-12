@@ -21,7 +21,7 @@ class LocationListTile extends StatelessWidget {
         BlocProvider.of<LocationCubit>(context)
             .getlatlangfromplaceid(location.placid);
 
-        animateto(0.15, sheetcontroller);
+        animateto(0.2, sheetcontroller);
         FocusManager.instance.primaryFocus?.unfocus();
       },
       minVerticalPadding: 0,

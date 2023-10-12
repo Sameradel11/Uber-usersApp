@@ -10,28 +10,27 @@ import 'package:user_app/core/style.dart';
 
 import 'scrollsheetwidgets/visibility_button.dart';
 
-class CustomScrollSheetDestination extends StatefulWidget {
-  const CustomScrollSheetDestination({
+class CustomScrollSheetPickUp extends StatefulWidget {
+  const CustomScrollSheetPickUp({
     super.key,
-    required this.textcontroller,
-    required this.destinationcontroller,
+    required this.pickupcontroller,
     required this.labeltext,
     required this.hinttext,
-    required this.onclicked,
+    required this.onclicked, required this.destinationcontroller,
   });
-  final TextEditingController textcontroller;
+  final TextEditingController pickupcontroller;
   final TextEditingController destinationcontroller;
   final String labeltext;
   final String hinttext;
   final onclicked;
 
   @override
-  State<CustomScrollSheetDestination> createState() =>
+  State<CustomScrollSheetPickUp> createState() =>
       _CustomScrollSheetDestinationState();
 }
 
 class _CustomScrollSheetDestinationState
-    extends State<CustomScrollSheetDestination> {
+    extends State<CustomScrollSheetPickUp> {
   DraggableScrollableController sheetcontroller =
       DraggableScrollableController();
   List<AutoCompleteModel> locations = [];
@@ -82,18 +81,19 @@ class _CustomScrollSheetDestinationState
                             BlocProvider.of<LocationCubit>(context)
                                 .autocomplete(value);
                           },
-                          controller: widget.textcontroller,
+                          controller: widget.pickupcontroller,
                           hint: widget.hinttext,
                         ),
                         onFocusChange: (hasfocus) {
-                          changeFocus(
-                              hasfocus, sheetcontroller, widget.textcontroller);
+                          changeFocus(hasfocus, sheetcontroller,
+                              widget.pickupcontroller);
                         },
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      VisibilityButton(isvisible: isvisible, onclicked: widget.onclicked),
+                      VisibilityButton(
+                          isvisible: isvisible, onclicked: widget.onclicked),
                       const SizedBox(height: 20),
                       state is LocationLoading
                           ? const Center(child: CircularProgressIndicator())
@@ -113,23 +113,22 @@ class _CustomScrollSheetDestinationState
   }
 
   bool buttonListener(notification) {
-      print(notification.extent);
-      if (notification.extent < 0.3) {
-        if (isvisible != true) {
-          print("Entered");
-          setState(() {
-            isvisible = true;
-          });
-        }
-      } else {
-        if (isvisible != false) {
-          print("Entered");
-          setState(() {
-            isvisible = false;
-          });
-        }
+    print(notification.extent);
+    if (notification.extent < 0.3) {
+      if (isvisible != true) {
+        print("Entered");
+        setState(() {
+          isvisible = true;
+        });
       }
-      return true;
+    } else {
+      if (isvisible != false) {
+        print("Entered");
+        setState(() {
+          isvisible = false;
+        });
+      }
     }
+    return true;
+  }
 }
-

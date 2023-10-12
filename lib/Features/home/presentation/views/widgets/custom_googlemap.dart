@@ -27,14 +27,17 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     return BlocConsumer<LocationCubit, Locationstate>(
       listener: (BuildContext context, Locationstate state) {
         if (state is LocationLatLngUpdated) {
+          // get current latlng
           LatLng latlng = BlocProvider.of<LocationCubit>(context).latLng!;
+          // Get the Address of current location and type it in text field
+          BlocProvider.of<LocationCubit>(context).
+          getaddressfromlatlang(latlng);
+          // animate the camera to current latlng
           BlocProvider.of<LocationCubit>(context)
               .animatecamera(latlng, widget.mycompleter);
-          BlocProvider.of<LocationCubit>(context).getaddressfromlatlang(latlng);
-        }
-        else if (state is LocationAddressSuccess){
+
           
-        }
+        } 
       },
       builder: (context, state) {
         LatLng latlng =

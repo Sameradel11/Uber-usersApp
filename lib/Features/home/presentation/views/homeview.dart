@@ -4,12 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:user_app/Features/home/models/usermodel.dart';
-import 'package:user_app/Features/googlemap/presentation/views/custom_googlemap.dart';
+import 'package:user_app/Features/home/presentation/views/widgets/custom_googlemap.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/autocompelte/locationcubit.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/fetchdata/fetchuserdata_cubit.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/destination_custom_scroll_sheet.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/opendrawer.dart';
+import 'package:user_app/Features/home/presentation/views/widgets/pickup_custom_scroll_sheet.dart';
 import 'package:user_app/core/functions.dart';
 
 class HomeView extends StatefulWidget {
@@ -36,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
   final TextEditingController pickupcontroller = TextEditingController();
   final TextEditingController destinationcontroller = TextEditingController();
 
-  late List<Widget> scrollsheets;
+  late List<Widget> Scrollsheets;
   int sheetindex = 0;
   @override
   void initState() {
@@ -75,7 +76,7 @@ class _HomeViewState extends State<HomeView> {
         ],
         child: BlocBuilder<FetchdataCubit, FetchdataState>(
           builder: (context, state) {
-            scrollsheets = [
+            Scrollsheets = [
               CustomScrollSheetDestination(
                 textcontroller: pickupcontroller,
                 destinationcontroller: destinationcontroller,
@@ -88,8 +89,8 @@ class _HomeViewState extends State<HomeView> {
                       .getcurrentlocation(mycontroller);
                 },
               ),
-              CustomScrollSheetDestination(
-                textcontroller: destinationcontroller,
+              CustomScrollSheetPickUp(
+                pickupcontroller: pickupcontroller,
                 destinationcontroller: destinationcontroller,
                 labeltext: 'Pick up Location',
                 hinttext: 'From',
@@ -109,7 +110,7 @@ class _HomeViewState extends State<HomeView> {
                         mycompleter: mycontroller,
                         mapcontroller: mapcontroller),
                     OpenDrawer(scfkey: scfkey),
-                    scrollsheets[sheetindex]
+                    Scrollsheets[sheetindex]
                   ],
                 ),
               ),

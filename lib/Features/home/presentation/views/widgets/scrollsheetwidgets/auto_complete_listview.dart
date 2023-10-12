@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:user_app/Features/home/models/autocompletelocation.dart';
-import 'package:user_app/Features/home/presentation/views/widgets/location_list_tile.dart';
+import 'package:user_app/Features/home/presentation/views/widgets/scrollsheetwidgets/location_list_tile.dart';
 
 class AutoCompleteListview extends StatelessWidget {
   const AutoCompleteListview({

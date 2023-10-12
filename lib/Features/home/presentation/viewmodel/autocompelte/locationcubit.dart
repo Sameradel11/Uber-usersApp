@@ -51,8 +51,7 @@ class LocationCubit extends Cubit<Locationstate> {
           desiredAccuracy: LocationAccuracy.high);
       LatLng currentlatlang =
           LatLng(currentposition.latitude, currentposition.longitude);
-      animatecamera(currentlatlang, controller);
-      getaddressfromlatlang(currentlatlang);
+      updatelatlang(currentlatlang);
     } catch (e) {
       emit(Locationfiled(errmessage: e.toString()));
     }
