@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:user_app/Features/googlemap/presentation/viewmodel/location/location_cubit.dart';
 import 'package:user_app/Features/home/models/autocompletelocation.dart';
+import 'package:user_app/Features/home/presentation/viewmodel/autocompelte/locationcubit.dart';
 import 'package:user_app/core/functions.dart';
 import 'package:user_app/core/style.dart';
 
@@ -20,6 +20,7 @@ class LocationListTile extends StatelessWidget {
       onTap: () {
         BlocProvider.of<LocationCubit>(context)
             .getlatlangfromplaceid(location.placid);
+
         animateto(0.15, sheetcontroller);
         FocusManager.instance.primaryFocus?.unfocus();
       },

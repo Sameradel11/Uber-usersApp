@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:user_app/Features/googlemap/presentation/viewmodel/location/location_cubit.dart';
 import 'package:user_app/Features/home/models/usermodel.dart';
 import 'package:user_app/Features/googlemap/presentation/views/custom_googlemap.dart';
+import 'package:user_app/Features/home/presentation/viewmodel/autocompelte/locationcubit.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/fetchdata/fetchuserdata_cubit.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/custom_scroll_sheet.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
@@ -23,15 +23,22 @@ class _HomeViewState extends State<HomeView> {
   GoogleMapController? mapcontroller;
   final Completer<GoogleMapController> mycontroller =
       Completer<GoogleMapController>();
+
   late FToast fToast;
+
   UserModel? user;
+
   GlobalKey<ScaffoldState> scfkey = GlobalKey<ScaffoldState>();
+
   final DraggableScrollableController scrollController =
       DraggableScrollableController();
 
   final TextEditingController pickupcontroller = TextEditingController();
   final TextEditingController destinationcontroller = TextEditingController();
+
   bool locationisfrom = true;
+
+  List<LatLng> triplatlang = [];
   @override
   void initState() {
     super.initState();
@@ -56,15 +63,16 @@ class _HomeViewState extends State<HomeView> {
               showtoast(state.errmeassge, context);
             }
           }),
-          BlocListener<LocationCubit, LocationState>(
-              listener: (context, state) {
-            if (state is Currentlocationsuccess) {
-              showtoast("Location Get Successfully", context);
-              pickupcontroller.text = "${state.street} ${state.locality}";
-            } else if (state is LocationFailure) {
-              showtoast(state.errmessage, context);
-            }
-          }),
+          BlocListener<LocationCubit, Locationstate>(
+            listener: (context, state) {
+              if (state is LocationAddressSuccess) {
+                showtoast("Location Get Successfully", context);
+                pickupcontroller.text = "${state.street} ${state.locality}";
+              } else if (state is Locationfiled) {
+                showtoast(state.errmessage, context);
+              }
+            },
+          ),
         ],
         child: BlocBuilder<FetchdataCubit, FetchdataState>(
           builder: (context, state) {
@@ -85,8 +93,8 @@ class _HomeViewState extends State<HomeView> {
                         ? CustomScrollSheet(
                             textcontroller: pickupcontroller,
                             destinationcontroller: destinationcontroller,
-                            labeltext: 'Pick up Location',
-                            hinttext: 'From',
+                            labeltext: 'Destination',
+                            hinttext: 'To',
                             onsubmit: (value) {
                               locationisfrom = false;
                               setState(() {});
@@ -96,8 +104,8 @@ class _HomeViewState extends State<HomeView> {
                         : CustomScrollSheet(
                             textcontroller: destinationcontroller,
                             destinationcontroller: destinationcontroller,
-                            labeltext: 'Destination',
-                            hinttext: 'To',
+                            labeltext: 'Pick up Location',
+                            hinttext: 'From',
                             onsubmit: (value) {},
                           )
                   ],
