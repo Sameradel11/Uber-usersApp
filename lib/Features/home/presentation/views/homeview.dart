@@ -68,6 +68,28 @@ class _HomeViewState extends State<HomeView> {
               if (state is LocationAddressSuccess) {
                 showtoast("Location Get Successfully", context);
                 pickupcontroller.text = "${state.street} ${state.locality}";
+                BlocProvider.of<LocationCubit>(context).direction();
+                showtoast("Direction method called", context);
+                if (BlocProvider.of<LocationCubit>(context).pickuplatlng !=
+                    null) {
+                  print("*" * 100);
+                  print(BlocProvider.of<LocationCubit>(context)
+                          .pickuplatlng
+                          .toString() +
+                      "-----" +
+                      BlocProvider.of<LocationCubit>(context)
+                          .destinationlatlng
+                          .toString());
+                }
+              } else if (state is LocationDirectionSuccess) {
+                final m =
+                    BlocProvider.of<LocationCubit>(context).directionModel;
+                print(m!.distancetext);
+                print(m.distancevalue);
+                print(m.durationtext);
+                print(m.durationvalue);
+                print(m.epoints);
+                showtoast("Directionmodel printed", context);
               } else if (state is Locationfiled) {
                 showtoast(state.errmessage, context);
               }

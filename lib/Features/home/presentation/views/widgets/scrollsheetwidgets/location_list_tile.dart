@@ -9,17 +9,18 @@ class LocationListTile extends StatelessWidget {
   const LocationListTile({
     super.key,
     required this.location,
-    required this.sheetcontroller,
+    required this.sheetcontroller, required this.type,
   });
 
   final AutoCompleteModel location;
   final sheetcontroller;
+  final String type;
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
         BlocProvider.of<LocationCubit>(context)
-            .getlatlangfromplaceid(location.placid);
+            .getlatlangfromplaceid(location.placid, type);
 
         animateto(0.2, sheetcontroller);
         FocusManager.instance.primaryFocus?.unfocus();

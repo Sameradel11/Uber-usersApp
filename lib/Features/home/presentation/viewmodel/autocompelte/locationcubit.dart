@@ -7,12 +7,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 import 'package:user_app/Features/home/models/autocompletelocation.dart';
+import 'package:user_app/Features/home/models/directonmodel.dart';
 import 'package:user_app/core/const.dart';
 
 part 'locationstates.dart';
 
 class LocationCubit extends Cubit<Locationstate> {
   LatLng? latLng;
+  LatLng? destinationlatlng;
+  LatLng? pickuplatlng;
+  DirectionModel? directionModel;
+
   LocationCubit() : super(LocationInitial());
 
   autocomplete(String value) async {
@@ -51,13 +56,13 @@ class LocationCubit extends Cubit<Locationstate> {
           desiredAccuracy: LocationAccuracy.high);
       LatLng currentlatlang =
           LatLng(currentposition.latitude, currentposition.longitude);
-      updatelatlang(currentlatlang);
+      updatelatlang(currentlatlang,null);
     } catch (e) {
       emit(Locationfiled(errmessage: e.toString()));
     }
   }
 
-  getlatlangfromplaceid(String placeid) async {
+  getlatlangfromplaceid(String placeid,String type) async {
     try {
       String key = androidkey;
       String url =
@@ -68,7 +73,7 @@ class LocationCubit extends Cubit<Locationstate> {
       LatLng locationlatlng = LatLng(
           response.data["result"]['geometry']['location']['lat'],
           response.data["result"]['geometry']['location']['lng']);
-      updatelatlang(locationlatlng);
+      updatelatlang(locationlatlng,type);
     } on Exception catch (e) {
       emit(Locationfiled(errmessage: e.toString()));
     }
@@ -95,8 +100,26 @@ class LocationCubit extends Cubit<Locationstate> {
         .animateCamera(CameraUpdate.newCameraPosition(currentcameraposition));
   }
 
-  updatelatlang(LatLng newlatlang) {
+  updatelatlang(LatLng newlatlang, String? type) {
+    if (type == "origin") {
+      pickuplatlng = newlatlang;
+    } else if (type == "dest") {
+      destinationlatlng = newlatlang;
+    }
     latLng = newlatlang;
     emit(LocationLatLngUpdated());
+  }
+
+  direction() async {
+    const LatLng origin = LatLng(31.265148, 29.992268);
+    const LatLng destination = LatLng(31.234387, 29.9601701);
+    String url =
+        "https://maps.googleapis.com/maps/api/directions/json?destination=31.234387,29.9601701&origin=31.265148,29.992268&key=AIzaSyB5NWG9fpjHO8ukBaXei7sCyEk1beGIPKE";
+    Dio dio = Dio();
+    var response = await dio.get(url);
+    if (response.data['status'] == 'OK') {
+      directionModel = DirectionModel.fromjson(response.data);
+      emit(LocationDirectionSuccess());
+    }
   }
 }

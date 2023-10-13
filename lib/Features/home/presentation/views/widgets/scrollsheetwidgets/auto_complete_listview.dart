@@ -6,12 +6,12 @@ class AutoCompleteListview extends StatelessWidget {
   const AutoCompleteListview({
     super.key,
     required this.locations,
-    required this.sheetcontroller,
+    required this.sheetcontroller, required this.type,
   });
 
   final List<AutoCompleteModel> locations;
   final DraggableScrollableController sheetcontroller;
-
+  final String type;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -21,10 +21,10 @@ class AutoCompleteListview extends StatelessWidget {
             child: LocationListTile(
               location: locations[index],
               sheetcontroller: sheetcontroller,
+              type: type,
             ),
           )),
-      separatorBuilder: (BuildContext context, int index) =>
-          const SizedBox(
+      separatorBuilder: (BuildContext context, int index) => const SizedBox(
         height: 10,
       ),
       itemCount: locations.length,

@@ -100,7 +100,7 @@ class _CustomScrollSheetDestinationState
                           : const SizedBox(),
                       AutoCompleteListview(
                           locations: locations,
-                          sheetcontroller: sheetcontroller),
+                          sheetcontroller: sheetcontroller, type: 'dest',),
                     ],
                   ),
                 ),

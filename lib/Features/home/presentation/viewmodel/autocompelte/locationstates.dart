@@ -30,3 +30,4 @@ final class LocationAddressSuccess extends Locationstate {
       required this.locality,
       required this.currentlatlang});
 }
+final class LocationDirectionSuccess extends Locationstate{}
