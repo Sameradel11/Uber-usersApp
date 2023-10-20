@@ -57,7 +57,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
             onMapCreated: (GoogleMapController controller) async {
               widget.mycompleter.complete(controller);
               await BlocProvider.of<LocationCubit>(context)
-                  .getcurrentlocation(widget.mycompleter);
+                  .getcurrentlocation(widget.mycompleter,"dest");
             },
           ),
         );

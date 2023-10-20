@@ -37,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
   final TextEditingController pickupcontroller = TextEditingController();
   final TextEditingController destinationcontroller = TextEditingController();
 
-  late List<Widget> Scrollsheets;
+  late List<Widget> scrollsheets;
   int sheetindex = 0;
   @override
   void initState() {
@@ -68,10 +68,13 @@ class _HomeViewState extends State<HomeView> {
               if (state is LocationAddressSuccess) {
                 showtoast("Location Get Successfully", context);
                 pickupcontroller.text = "${state.street} ${state.locality}";
-                BlocProvider.of<LocationCubit>(context).direction();
-                showtoast("Direction method called", context);
                 if (BlocProvider.of<LocationCubit>(context).pickuplatlng !=
                     null) {
+                  BlocProvider.of<LocationCubit>(context).direction();
+                  
+                }
+              } else if (state is LocationDirectionSuccess) {
+                showtoast("Direction method called", context);
                   print("*" * 100);
                   print(BlocProvider.of<LocationCubit>(context)
                           .pickuplatlng
@@ -80,16 +83,14 @@ class _HomeViewState extends State<HomeView> {
                       BlocProvider.of<LocationCubit>(context)
                           .destinationlatlng
                           .toString());
-                }
-              } else if (state is LocationDirectionSuccess) {
                 final m =
                     BlocProvider.of<LocationCubit>(context).directionModel;
+                showtoast("Directionmodel printed", context);
                 print(m!.distancetext);
                 print(m.distancevalue);
                 print(m.durationtext);
                 print(m.durationvalue);
                 print(m.epoints);
-                showtoast("Directionmodel printed", context);
               } else if (state is Locationfiled) {
                 showtoast(state.errmessage, context);
               }
@@ -98,7 +99,7 @@ class _HomeViewState extends State<HomeView> {
         ],
         child: BlocBuilder<FetchdataCubit, FetchdataState>(
           builder: (context, state) {
-            Scrollsheets = [
+            scrollsheets = [
               CustomScrollSheetDestination(
                 textcontroller: pickupcontroller,
                 destinationcontroller: destinationcontroller,
@@ -108,7 +109,7 @@ class _HomeViewState extends State<HomeView> {
                   sheetindex = 1;
                   setState(() {});
                   BlocProvider.of<LocationCubit>(context)
-                      .getcurrentlocation(mycontroller);
+                      .getcurrentlocation(mycontroller,"origin");
                 },
               ),
               CustomScrollSheetPickUp(
@@ -132,7 +133,7 @@ class _HomeViewState extends State<HomeView> {
                         mycompleter: mycontroller,
                         mapcontroller: mapcontroller),
                     OpenDrawer(scfkey: scfkey),
-                    Scrollsheets[sheetindex]
+                    scrollsheets[sheetindex]
                   ],
                 ),
               ),

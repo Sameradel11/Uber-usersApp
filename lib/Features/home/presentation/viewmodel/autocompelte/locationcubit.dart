@@ -9,6 +9,7 @@ import 'package:meta/meta.dart';
 import 'package:user_app/Features/home/models/autocompletelocation.dart';
 import 'package:user_app/Features/home/models/directonmodel.dart';
 import 'package:user_app/core/const.dart';
+import 'package:user_app/core/functions.dart';
 
 part 'locationstates.dart';
 
@@ -49,20 +50,20 @@ class LocationCubit extends Cubit<Locationstate> {
     }
   }
 
-  Future<void> getcurrentlocation(controller) async {
+  Future<void> getcurrentlocation(controller, String sheet) async {
     try {
       emit(LocationLoading());
       Position currentposition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       LatLng currentlatlang =
           LatLng(currentposition.latitude, currentposition.longitude);
-      updatelatlang(currentlatlang,null);
+      updatelatlang(currentlatlang, sheet);
     } catch (e) {
       emit(Locationfiled(errmessage: e.toString()));
     }
   }
 
-  getlatlangfromplaceid(String placeid,String type) async {
+  getlatlangfromplaceid(String placeid, String type) async {
     try {
       String key = androidkey;
       String url =
@@ -73,7 +74,7 @@ class LocationCubit extends Cubit<Locationstate> {
       LatLng locationlatlng = LatLng(
           response.data["result"]['geometry']['location']['lat'],
           response.data["result"]['geometry']['location']['lng']);
-      updatelatlang(locationlatlng,type);
+      updatelatlang(locationlatlng, type);
     } on Exception catch (e) {
       emit(Locationfiled(errmessage: e.toString()));
     }
@@ -102,8 +103,10 @@ class LocationCubit extends Cubit<Locationstate> {
 
   updatelatlang(LatLng newlatlang, String? type) {
     if (type == "origin") {
+      print("PickUp location update");
       pickuplatlng = newlatlang;
     } else if (type == "dest") {
+      print("destination location update");
       destinationlatlng = newlatlang;
     }
     latLng = newlatlang;
@@ -111,10 +114,9 @@ class LocationCubit extends Cubit<Locationstate> {
   }
 
   direction() async {
-    const LatLng origin = LatLng(31.265148, 29.992268);
-    const LatLng destination = LatLng(31.234387, 29.9601701);
+
     String url =
-        "https://maps.googleapis.com/maps/api/directions/json?destination=31.234387,29.9601701&origin=31.265148,29.992268&key=AIzaSyB5NWG9fpjHO8ukBaXei7sCyEk1beGIPKE";
+        "https://maps.googleapis.com/maps/api/directions/json?destination=${pickuplatlng!.latitude},${pickuplatlng!.longitude}&origin=${destinationlatlng!.latitude},${destinationlatlng!.longitude}&key=AIzaSyB5NWG9fpjHO8ukBaXei7sCyEk1beGIPKE";
     Dio dio = Dio();
     var response = await dio.get(url);
     if (response.data['status'] == 'OK') {
