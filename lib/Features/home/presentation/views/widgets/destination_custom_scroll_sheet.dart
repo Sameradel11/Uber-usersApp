@@ -14,13 +14,11 @@ class CustomScrollSheetDestination extends StatefulWidget {
   const CustomScrollSheetDestination({
     super.key,
     required this.textcontroller,
-    required this.destinationcontroller,
     required this.labeltext,
     required this.hinttext,
     required this.onclicked,
   });
   final TextEditingController textcontroller;
-  final TextEditingController destinationcontroller;
   final String labeltext;
   final String hinttext;
   final onclicked;

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:user_app/Features/home/models/usermodel.dart';
@@ -11,6 +13,8 @@ import 'package:user_app/Features/home/presentation/views/widgets/destination_cu
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/opendrawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/pickup_custom_scroll_sheet.dart';
+import 'package:user_app/core/const.dart';
+import 'package:user_app/core/const.dart';
 import 'package:user_app/core/functions.dart';
 
 class HomeView extends StatefulWidget {
@@ -34,11 +38,13 @@ class _HomeViewState extends State<HomeView> {
   final DraggableScrollableController scrollController =
       DraggableScrollableController();
 
-  final TextEditingController pickupcontroller = TextEditingController();
-  final TextEditingController destinationcontroller = TextEditingController();
+  final TextEditingController textcontroller = TextEditingController();
 
   late List<Widget> scrollsheets;
   int sheetindex = 0;
+
+  List<LatLng> pointlist = [];
+
   @override
   void initState() {
     super.initState();
@@ -67,22 +73,21 @@ class _HomeViewState extends State<HomeView> {
             listener: (context, state) {
               if (state is LocationAddressSuccess) {
                 showtoast("Location Get Successfully", context);
-                pickupcontroller.text = "${state.street} ${state.locality}";
+                textcontroller.text = "${state.street} ${state.locality}";
                 if (BlocProvider.of<LocationCubit>(context).pickuplatlng !=
                     null) {
                   BlocProvider.of<LocationCubit>(context).direction();
-                  
                 }
               } else if (state is LocationDirectionSuccess) {
                 showtoast("Direction method called", context);
-                  print("*" * 100);
-                  print(BlocProvider.of<LocationCubit>(context)
-                          .pickuplatlng
-                          .toString() +
-                      "-----" +
-                      BlocProvider.of<LocationCubit>(context)
-                          .destinationlatlng
-                          .toString());
+                print("*" * 100);
+                print(BlocProvider.of<LocationCubit>(context)
+                        .pickuplatlng
+                        .toString() +
+                    "---->-" +
+                    BlocProvider.of<LocationCubit>(context)
+                        .destinationlatlng
+                        .toString());
                 final m =
                     BlocProvider.of<LocationCubit>(context).directionModel;
                 showtoast("Directionmodel printed", context);
@@ -91,6 +96,16 @@ class _HomeViewState extends State<HomeView> {
                 print(m.durationtext);
                 print(m.durationvalue);
                 print(m.epoints);
+                PolylinePoints polylinePoints = PolylinePoints();
+                List<PointLatLng> result =
+                    polylinePoints.decodePolyline(m.epoints);
+                
+                for (int i = 0; i < result.length; i++) {
+                  pointlist
+                      .add(LatLng(result[i].latitude, result[i].longitude));
+                }
+
+              
               } else if (state is Locationfiled) {
                 showtoast(state.errmessage, context);
               }
@@ -101,20 +116,18 @@ class _HomeViewState extends State<HomeView> {
           builder: (context, state) {
             scrollsheets = [
               CustomScrollSheetDestination(
-                textcontroller: pickupcontroller,
-                destinationcontroller: destinationcontroller,
+                textcontroller: textcontroller,
                 labeltext: 'Destination',
                 hinttext: 'To Where',
                 onclicked: () {
                   sheetindex = 1;
                   setState(() {});
                   BlocProvider.of<LocationCubit>(context)
-                      .getcurrentlocation(mycontroller,"origin");
+                      .getcurrentlocation(mycontroller, "origin");
                 },
               ),
               CustomScrollSheetPickUp(
-                pickupcontroller: pickupcontroller,
-                destinationcontroller: destinationcontroller,
+                pickupcontroller: textcontroller,
                 labeltext: 'Pick up Location',
                 hinttext: 'From',
                 onclicked: () {},
@@ -130,6 +143,7 @@ class _HomeViewState extends State<HomeView> {
                   alignment: Alignment.bottomCenter,
                   children: [
                     CustomGoogleMap(
+                      polylist: pointlist,
                         mycompleter: mycontroller,
                         mapcontroller: mapcontroller),
                     OpenDrawer(scfkey: scfkey),

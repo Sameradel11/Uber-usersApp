@@ -16,10 +16,9 @@ class CustomScrollSheetPickUp extends StatefulWidget {
     required this.pickupcontroller,
     required this.labeltext,
     required this.hinttext,
-    required this.onclicked, required this.destinationcontroller,
+    required this.onclicked,
   });
   final TextEditingController pickupcontroller;
-  final TextEditingController destinationcontroller;
   final String labeltext;
   final String hinttext;
   final onclicked;
@@ -99,8 +98,10 @@ class _CustomScrollSheetDestinationState
                           ? const Center(child: CircularProgressIndicator())
                           : const SizedBox(),
                       AutoCompleteListview(
-                          locations: locations,
-                          sheetcontroller: sheetcontroller, type: 'origin',),
+                        locations: locations,
+                        sheetcontroller: sheetcontroller,
+                        type: 'origin',
+                      ),
                     ],
                   ),
                 ),
