@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -124,4 +125,23 @@ class LocationCubit extends Cubit<Locationstate> {
       emit(LocationDirectionSuccess());
     }
   }
+    void animateWithBoundries(LatLng pickup, LatLng destination,Completer controller) async {
+    final GoogleMapController newcontroller = await controller.future;
+    
+    await newcontroller.animateCamera(
+        CameraUpdate.newLatLngBounds(getboudries(pickup, destination), 60));
+  }
+
+  getboudries(LatLng? pickup, LatLng? destination) {
+    if (pickup != null && destination != null) {
+      print("Entered");
+      LatLng south = LatLng(min(pickup.latitude, destination.latitude),
+          min(pickup.longitude, destination.longitude));
+
+      LatLng north = LatLng(max(pickup.latitude, destination.latitude),
+          max(pickup.longitude, destination.longitude));
+      return LatLngBounds(southwest: south, northeast: north);
+    }
+  }
+
 }

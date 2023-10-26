@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -13,8 +12,6 @@ import 'package:user_app/Features/home/presentation/views/widgets/destination_cu
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/opendrawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/pickup_custom_scroll_sheet.dart';
-import 'package:user_app/core/const.dart';
-import 'package:user_app/core/const.dart';
 import 'package:user_app/core/functions.dart';
 
 class HomeView extends StatefulWidget {
@@ -74,10 +71,6 @@ class _HomeViewState extends State<HomeView> {
               if (state is LocationAddressSuccess) {
                 showtoast("Location Get Successfully", context);
                 textcontroller.text = "${state.street} ${state.locality}";
-                if (BlocProvider.of<LocationCubit>(context).pickuplatlng !=
-                    null) {
-                  BlocProvider.of<LocationCubit>(context).direction();
-                }
               } else if (state is LocationDirectionSuccess) {
                 showtoast("Direction method called", context);
                 print("*" * 100);
@@ -99,13 +92,11 @@ class _HomeViewState extends State<HomeView> {
                 PolylinePoints polylinePoints = PolylinePoints();
                 List<PointLatLng> result =
                     polylinePoints.decodePolyline(m.epoints);
-                
+
                 for (int i = 0; i < result.length; i++) {
                   pointlist
                       .add(LatLng(result[i].latitude, result[i].longitude));
                 }
-
-              
               } else if (state is Locationfiled) {
                 showtoast(state.errmessage, context);
               }
@@ -130,7 +121,9 @@ class _HomeViewState extends State<HomeView> {
                 pickupcontroller: textcontroller,
                 labeltext: 'Pick up Location',
                 hinttext: 'From',
-                onclicked: () {},
+                onclicked: () {
+                  BlocProvider.of<LocationCubit>(context).direction();
+                },
               )
             ];
             return SafeArea(
@@ -143,7 +136,7 @@ class _HomeViewState extends State<HomeView> {
                   alignment: Alignment.bottomCenter,
                   children: [
                     CustomGoogleMap(
-                      polylist: pointlist,
+                        polylist: pointlist,
                         mycompleter: mycontroller,
                         mapcontroller: mapcontroller),
                     OpenDrawer(scfkey: scfkey),
