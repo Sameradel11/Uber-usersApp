@@ -10,7 +10,6 @@ import 'package:meta/meta.dart';
 import 'package:user_app/Features/home/models/autocompletelocation.dart';
 import 'package:user_app/Features/home/models/directonmodel.dart';
 import 'package:user_app/core/const.dart';
-import 'package:user_app/core/functions.dart';
 
 part 'locationstates.dart';
 
@@ -23,6 +22,8 @@ class LocationCubit extends Cubit<Locationstate> {
   LocationCubit() : super(LocationInitial());
 
   autocomplete(String value) async {
+    print("*" * 50);
+    print("Auto Complete Called");
     emit(LocationLoading());
     String key = androidkey;
     String url =
@@ -97,7 +98,7 @@ class LocationCubit extends Cubit<Locationstate> {
   animatecamera(LatLng latLng, Completer controller) async {
     final GoogleMapController newcontroller = await controller.future;
     CameraPosition currentcameraposition =
-        CameraPosition(target: latLng, zoom: 14);
+        CameraPosition(target: latLng, zoom: 18);
     await newcontroller
         .animateCamera(CameraUpdate.newCameraPosition(currentcameraposition));
   }
@@ -106,16 +107,16 @@ class LocationCubit extends Cubit<Locationstate> {
     if (type == "origin") {
       print("PickUp location update");
       pickuplatlng = newlatlang;
+      emit(LocationLatLngUpdated(ispickup: true));
     } else if (type == "dest") {
+      emit(LocationLatLngUpdated(ispickup: false));
       print("destination location update");
       destinationlatlng = newlatlang;
     }
     latLng = newlatlang;
-    emit(LocationLatLngUpdated());
   }
 
   direction() async {
-
     String url =
         "https://maps.googleapis.com/maps/api/directions/json?destination=${pickuplatlng!.latitude},${pickuplatlng!.longitude}&origin=${destinationlatlng!.latitude},${destinationlatlng!.longitude}&key=AIzaSyB5NWG9fpjHO8ukBaXei7sCyEk1beGIPKE";
     Dio dio = Dio();
@@ -125,11 +126,13 @@ class LocationCubit extends Cubit<Locationstate> {
       emit(LocationDirectionSuccess());
     }
   }
-    void animateWithBoundries(LatLng pickup, LatLng destination,Completer controller) async {
+
+  void animateWithBoundries(
+      LatLng pickup, LatLng destination, Completer controller) async {
     final GoogleMapController newcontroller = await controller.future;
-    
+
     await newcontroller.animateCamera(
-        CameraUpdate.newLatLngBounds(getboudries(pickup, destination), 60));
+        CameraUpdate.newLatLngBounds(getboudries(pickup, destination), 20));
   }
 
   getboudries(LatLng? pickup, LatLng? destination) {
@@ -143,5 +146,4 @@ class LocationCubit extends Cubit<Locationstate> {
       return LatLngBounds(southwest: south, northeast: north);
     }
   }
-
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,12 +8,8 @@ import 'package:user_app/core/const.dart';
 // ignore: must_be_immutable
 class CustomGoogleMap extends StatefulWidget {
   CustomGoogleMap(
-      {super.key,
-      required this.mycompleter,
-      required this.mapcontroller,
-      required this.polylist});
+      {super.key, required this.mycompleter, required this.polylist});
   final Completer mycompleter;
-  GoogleMapController? mapcontroller;
   final List<LatLng> polylist;
 
   @override
@@ -25,6 +20,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   late Polyline polyline = const Polyline(polylineId: PolylineId("PolyLineID"));
   Set<Polyline> polylineset = {};
   Set<Marker> markerset = {};
+  Set<Circle> circleset = {};
   @override
   void initState() {
     super.initState();
@@ -38,26 +34,27 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
         if (state is LocationLatLngUpdated) {
           // get current latlng
           LatLng latlng = BlocProvider.of<LocationCubit>(context).latLng!;
-
           // Get the Address of current location and type it in text field
           BlocProvider.of<LocationCubit>(context).getaddressfromlatlang(latlng);
-
           // animate the camera to current latlng
+          if (!state.ispickup) {
+            addMarker(latlng, false);
+          } else {
+            addMarker(latlng, true);
+          }
           BlocProvider.of<LocationCubit>(context)
               .animatecamera(latlng, widget.mycompleter);
 
           //Empty the set and drop a point on the given latlnh
-          addMarker(latlng);
         } else if (state is LocationDirectionSuccess) {
           //GEt the destination location to put a marker on it
           LatLng pickup = BlocProvider.of<LocationCubit>(context).pickuplatlng!;
           LatLng destination =
               BlocProvider.of<LocationCubit>(context).destinationlatlng!;
-          addMarker(destination);
+          addMarker(destination, false);
           //get the polyline and insert it to the set
           print("Direction is ready");
           addPolyLine();
-
           BlocProvider.of<LocationCubit>(context)
               .animateWithBoundries(pickup, destination, widget.mycompleter);
           setState(() {});
@@ -74,7 +71,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
             mapType: MapType.normal,
             initialCameraPosition: kGooglePlex,
             markers: markerset,
-            polylines: {polyline},
+            polylines: polylineset,
             onMapCreated: (GoogleMapController controller) async {
               widget.mycompleter.complete(controller);
               await BlocProvider.of<LocationCubit>(context)
@@ -99,9 +96,19 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     polylineset.add(polyline);
   }
 
-  void addMarker(LatLng latlng) {
+  void addMarker(LatLng latlng, bool ispickup) {
     markerset = {};
-    markerset
-        .add(Marker(markerId: const MarkerId('marker2'), position: latlng));
+    if (ispickup) {
+      markerset.add(Marker(
+          markerId: const MarkerId('marker2'),
+          position: latlng,
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan)));
+    } else {
+      markerset.add(Marker(
+        markerId: const MarkerId('marker2'),
+        position: latlng,
+      ));
+    }
   }
 }

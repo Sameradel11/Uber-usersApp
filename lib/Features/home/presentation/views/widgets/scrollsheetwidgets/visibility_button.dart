@@ -11,6 +11,7 @@ class VisibilityButton extends StatelessWidget {
 
   final bool isvisible;
   final onclicked;
+  
 
   @override
   Widget build(BuildContext context) {

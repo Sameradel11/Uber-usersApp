@@ -18,7 +18,11 @@ final class Locationfiled extends Locationstate {
 
 final class LocationLoading extends Locationstate {}
 
-final class LocationLatLngUpdated extends Locationstate {}
+final class LocationLatLngUpdated extends Locationstate {
+  final bool ispickup;
+
+  LocationLatLngUpdated({required this.ispickup});
+}
 
 final class LocationAddressSuccess extends Locationstate {
   final String street;
@@ -30,4 +34,5 @@ final class LocationAddressSuccess extends Locationstate {
       required this.locality,
       required this.currentlatlang});
 }
-final class LocationDirectionSuccess extends Locationstate{}
+
+final class LocationDirectionSuccess extends Locationstate {}

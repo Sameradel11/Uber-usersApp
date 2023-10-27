@@ -136,9 +136,7 @@ class _HomeViewState extends State<HomeView> {
                   alignment: Alignment.bottomCenter,
                   children: [
                     CustomGoogleMap(
-                        polylist: pointlist,
-                        mycompleter: mycontroller,
-                        mapcontroller: mapcontroller),
+                        polylist: pointlist, mycompleter: mycontroller),
                     OpenDrawer(scfkey: scfkey),
                     scrollsheets[sheetindex]
                   ],

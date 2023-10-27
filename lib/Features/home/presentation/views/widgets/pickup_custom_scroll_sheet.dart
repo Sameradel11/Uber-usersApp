@@ -7,7 +7,7 @@ import 'package:user_app/Features/home/presentation/views/widgets/scrollsheetwid
 import 'package:user_app/Features/home/presentation/views/widgets/scrollsheetwidgets/text_row.dart';
 import 'package:user_app/core/functions.dart';
 import 'package:user_app/core/style.dart';
-
+import 'dart:async';
 import 'scrollsheetwidgets/visibility_button.dart';
 
 class CustomScrollSheetPickUp extends StatefulWidget {
@@ -34,6 +34,7 @@ class _CustomScrollSheetDestinationState
       DraggableScrollableController();
   List<AutoCompleteModel> locations = [];
   bool isvisible = true;
+  Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +50,11 @@ class _CustomScrollSheetDestinationState
         return NotificationListener<DraggableScrollableNotification>(
           onNotification: buttonListener,
           child: DraggableScrollableSheet(
-            snapSizes: const [0.2, 0.94],
+            snapSizes: const [0.23, 0.94],
             snap: true,
             controller: sheetcontroller,
-            initialChildSize: 0.2,
-            minChildSize: 0.2,
+            initialChildSize: 0.23,
+            minChildSize: 0.23,
             maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(
@@ -77,8 +78,14 @@ class _CustomScrollSheetDestinationState
                       Focus(
                         child: TextRow(
                           onchange: (value) async {
-                            BlocProvider.of<LocationCubit>(context)
-                                .autocomplete(value);
+                            _debounce =
+                                Timer(const Duration(milliseconds: 500), () {
+                              BlocProvider.of<LocationCubit>(context)
+                                  .autocomplete(value);
+                            });
+                            if (_debounce?.isActive ?? false) {
+                              _debounce!.cancel();
+                            }
                           },
                           controller: widget.pickupcontroller,
                           hint: widget.hinttext,
