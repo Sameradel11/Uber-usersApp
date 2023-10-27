@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_app/Features/home/models/autocompletelocation.dart';
@@ -9,34 +8,35 @@ import 'package:user_app/Features/home/presentation/views/widgets/scrollsheetwid
 import 'package:user_app/Features/home/presentation/views/widgets/scrollsheetwidgets/text_row.dart';
 import 'package:user_app/core/functions.dart';
 import 'package:user_app/core/style.dart';
-
 import 'scrollsheetwidgets/visibility_button.dart';
 
-class CustomScrollSheetDestination extends StatefulWidget {
-  const CustomScrollSheetDestination({
+class DefaultScrollSheet extends StatefulWidget {
+  const DefaultScrollSheet({
     super.key,
     required this.textcontroller,
     required this.labeltext,
     required this.hinttext,
     required this.onclicked,
+    required this.buttontext,
+    required this.sheetype,
   });
   final TextEditingController textcontroller;
   final String labeltext;
   final String hinttext;
   final onclicked;
+  final Text buttontext;
+  final String sheetype;
 
   @override
-  State<CustomScrollSheetDestination> createState() =>
-      _CustomScrollSheetDestinationState();
+  State<DefaultScrollSheet> createState() => _DefaultScrollSheetState();
 }
 
-class _CustomScrollSheetDestinationState
-    extends State<CustomScrollSheetDestination> {
+class _DefaultScrollSheetState extends State<DefaultScrollSheet> {
   DraggableScrollableController sheetcontroller =
       DraggableScrollableController();
-  List<AutoCompleteModel> locations = [];
   bool isvisible = true;
   Timer? _debounce;
+  List<AutoCompleteModel> locations = [];
 
   @override
   Widget build(BuildContext context) {
@@ -101,12 +101,15 @@ class _CustomScrollSheetDestinationState
                         height: 10,
                       ),
                       VisibilityButton(
-                          isvisible: isvisible, onclicked: widget.onclicked),
+                        isvisible: isvisible,
+                        onclicked: widget.onclicked,
+                        text: widget.buttontext,
+                      ),
                       const SizedBox(height: 20),
                       AutoCompleteListview(
                         locations: locations,
                         sheetcontroller: sheetcontroller,
-                        type: 'dest',
+                        type: widget.sheetype,
                       ),
                     ],
                   ),

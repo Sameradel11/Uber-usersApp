@@ -8,10 +8,9 @@ import 'package:user_app/Features/home/models/usermodel.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/custom_googlemap.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/autocompelte/locationcubit.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/fetchdata/fetchuserdata_cubit.dart';
-import 'package:user_app/Features/home/presentation/views/widgets/destination_custom_scroll_sheet.dart';
+import 'package:user_app/Features/home/presentation/views/widgets/default_scroll_sheet.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/drawer.dart';
 import 'package:user_app/Features/home/presentation/views/widgets/opendrawer.dart';
-import 'package:user_app/Features/home/presentation/views/widgets/pickup_custom_scroll_sheet.dart';
 import 'package:user_app/core/functions.dart';
 
 class HomeView extends StatefulWidget {
@@ -106,25 +105,27 @@ class _HomeViewState extends State<HomeView> {
         child: BlocBuilder<FetchdataCubit, FetchdataState>(
           builder: (context, state) {
             scrollsheets = [
-              CustomScrollSheetDestination(
-                textcontroller: textcontroller,
-                labeltext: 'Destination',
-                hinttext: 'To Where',
-                onclicked: () {
-                  sheetindex = 1;
-                  setState(() {});
-                  BlocProvider.of<LocationCubit>(context)
-                      .getcurrentlocation(mycontroller, "origin");
-                },
-              ),
-              CustomScrollSheetPickUp(
-                pickupcontroller: textcontroller,
-                labeltext: 'Pick up Location',
-                hinttext: 'From',
-                onclicked: () {
-                  BlocProvider.of<LocationCubit>(context).direction();
-                },
-              )
+              DefaultScrollSheet(
+                  textcontroller: textcontroller,
+                  labeltext: 'Destination',
+                  hinttext: 'To Where',
+                  onclicked: () {
+                    sheetindex = 1;
+                    setState(() {});
+                    BlocProvider.of<LocationCubit>(context)
+                        .getcurrentlocation(mycontroller, "origin");
+                  },
+                  buttontext: const Text("PickUp"),
+                  sheetype: "dest"),
+              DefaultScrollSheet(
+                  textcontroller: textcontroller,
+                  labeltext: 'Pick up Location',
+                  hinttext: 'From',
+                  onclicked: () {
+                    BlocProvider.of<LocationCubit>(context).direction();
+                  },
+                  buttontext: const Text("Direction"),
+                  sheetype: "origin"),
             ];
             return SafeArea(
               child: Scaffold(

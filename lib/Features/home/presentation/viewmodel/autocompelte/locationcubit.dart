@@ -132,7 +132,7 @@ class LocationCubit extends Cubit<Locationstate> {
     final GoogleMapController newcontroller = await controller.future;
 
     await newcontroller.animateCamera(
-        CameraUpdate.newLatLngBounds(getboudries(pickup, destination), 20));
+        CameraUpdate.newLatLngBounds(getboudries(pickup, destination), 30));
   }
 
   getboudries(LatLng? pickup, LatLng? destination) {

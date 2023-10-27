@@ -7,17 +7,18 @@ class VisibilityButton extends StatelessWidget {
     super.key,
     required this.isvisible,
     required this.onclicked,
+    required this.text,
   });
 
   final bool isvisible;
   final onclicked;
-  
+  final Text text;
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
         visible: isvisible,
-        child: CustomElevatedButton(
-            ontap: onclicked, child: const Text("Hello")));
+        child:
+            CustomElevatedButton(ontap: onclicked, child: text));
   }
 }
