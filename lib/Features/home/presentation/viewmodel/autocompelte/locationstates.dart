@@ -36,3 +36,5 @@ final class LocationAddressSuccess extends Locationstate {
 }
 
 final class LocationDirectionSuccess extends Locationstate {}
+final class LocationDirectionCanceled extends Locationstate {}
+

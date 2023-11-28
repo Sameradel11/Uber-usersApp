@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:user_app/Features/home/presentation/viewmodel/autocompelte/locationcubit.dart';
 import 'package:user_app/core/const.dart';
+import 'package:user_app/core/functions.dart';
 
 // ignore: must_be_immutable
 class CustomGoogleMap extends StatefulWidget {
@@ -17,7 +19,6 @@ class CustomGoogleMap extends StatefulWidget {
 }
 
 class _CustomGoogleMapState extends State<CustomGoogleMap> {
-  late Polyline polyline = const Polyline(polylineId: PolylineId("PolyLineID"));
   Set<Polyline> polylineset = {};
   Set<Marker> markerset = {};
   Set<Circle> circleset = {};
@@ -31,11 +32,12 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     double bottompadding = MediaQuery.sizeOf(context).height * 0.2;
     return BlocConsumer<LocationCubit, Locationstate>(
       listener: (BuildContext context, Locationstate state) async {
+        LocationCubit locationcubit = LocationCubit.get(context);
         if (state is LocationLatLngUpdated) {
           // get current latlng
-          LatLng latlng = BlocProvider.of<LocationCubit>(context).latLng!;
+          LatLng latlng = locationcubit.latLng!;
           // Get the Address of current location and type it in text field
-          BlocProvider.of<LocationCubit>(context).getaddressfromlatlang(latlng);
+          locationcubit.getaddressfromlatlang(latlng);
           // animate the camera to current latlng
           if (!state.ispickup) {
             addMarker(latlng, false);
@@ -48,16 +50,19 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
           //Empty the set and drop a point on the given latlnh
         } else if (state is LocationDirectionSuccess) {
           //GEt the destination location to put a marker on it
-          LatLng pickup = BlocProvider.of<LocationCubit>(context).pickuplatlng!;
-          LatLng destination =
-              BlocProvider.of<LocationCubit>(context).destinationlatlng!;
-          addMarker(destination, false);
+          LocationCubit locationcubit = LocationCubit.get(context);
+          LatLng? pickup = locationcubit.pickuplatlng;
+          LatLng? destination = locationcubit.destinationlatlng;
+          addMarker(destination!, false);
           //get the polyline and insert it to the set
-          print("Direction is ready");
           addPolyLine();
-          BlocProvider.of<LocationCubit>(context)
-              .animateWithBoundries(pickup, destination, widget.mycompleter);
-          setState(() {});
+          locationcubit.animateWithBoundries(
+              pickup!, destination, widget.mycompleter);
+        } else if (state is LocationDirectionCanceled) {
+          LocationCubit cubit = LocationCubit.get(context);
+          polylineset = {};
+          cubit.getcurrentlocation(widget.mycompleter, 'origin');
+          cubit.animatecamera(cubit.latLng!, widget.mycompleter);
         }
       },
       builder: (context, state) {
@@ -74,8 +79,23 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
             polylines: polylineset,
             onMapCreated: (GoogleMapController controller) async {
               widget.mycompleter.complete(controller);
-              await BlocProvider.of<LocationCubit>(context)
-                  .getcurrentlocation(widget.mycompleter, "dest");
+              LocationPermission permission =
+                  await Geolocator.checkPermission();
+              if (permission != LocationPermission.always &&
+                  permission != LocationPermission.whileInUse) {
+                permission = await Geolocator.requestPermission();
+                if (permission != LocationPermission.always &&
+                    permission != LocationPermission.whileInUse) {
+                  showtoast(
+                      "App Can't start without Location Permission", context);
+                } else {
+                  await BlocProvider.of<LocationCubit>(context)
+                      .getcurrentlocation(widget.mycompleter, "dest");
+                }
+              } else {
+                await BlocProvider.of<LocationCubit>(context)
+                    .getcurrentlocation(widget.mycompleter, "dest");
+              }
             },
           ),
         );
@@ -84,7 +104,8 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   }
 
   void addPolyLine() {
-    polyline = Polyline(
+    polylineset = {};
+    Polyline polyline = Polyline(
         polylineId: const PolylineId("Polyline1"),
         color: Colors.blue,
         jointType: JointType.mitered,
@@ -92,7 +113,6 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
         geodesic: true);
-    polylineset = {};
     polylineset.add(polyline);
   }
 

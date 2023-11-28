@@ -41,6 +41,8 @@ class _HomeViewState extends State<HomeView> {
 
   List<LatLng> pointlist = [];
 
+  bool directionbegin = false;
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +55,6 @@ class _HomeViewState extends State<HomeView> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => FetchdataCubit()..fetchuserdata()),
-        BlocProvider(create: (context) => LocationCubit())
       ],
       child: MultiBlocListener(
         listeners: [
@@ -72,14 +73,7 @@ class _HomeViewState extends State<HomeView> {
                 textcontroller.text = "${state.street} ${state.locality}";
               } else if (state is LocationDirectionSuccess) {
                 showtoast("Direction method called", context);
-                print("*" * 100);
-                print(BlocProvider.of<LocationCubit>(context)
-                        .pickuplatlng
-                        .toString() +
-                    "---->-" +
-                    BlocProvider.of<LocationCubit>(context)
-                        .destinationlatlng
-                        .toString());
+
                 final m =
                     BlocProvider.of<LocationCubit>(context).directionModel;
                 showtoast("Directionmodel printed", context);
@@ -91,11 +85,12 @@ class _HomeViewState extends State<HomeView> {
                 PolylinePoints polylinePoints = PolylinePoints();
                 List<PointLatLng> result =
                     polylinePoints.decodePolyline(m.epoints);
-
                 for (int i = 0; i < result.length; i++) {
                   pointlist
                       .add(LatLng(result[i].latitude, result[i].longitude));
                 }
+                directionbegin = true;
+                setState(() {});
               } else if (state is Locationfiled) {
                 showtoast(state.errmessage, context);
               }
@@ -138,7 +133,18 @@ class _HomeViewState extends State<HomeView> {
                   children: [
                     CustomGoogleMap(
                         polylist: pointlist, mycompleter: mycontroller),
-                    OpenDrawer(scfkey: scfkey),
+                    directionbegin
+                        ? Positioned(
+                            top: 20,
+                            left: 10,
+                            child: IconButton(
+                                onPressed: closeontap,
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.black,
+                                )),
+                          )
+                        : OpenDrawer(scfkey: scfkey),
                     scrollsheets[sheetindex]
                   ],
                 ),
@@ -148,5 +154,11 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     );
+  }
+
+  closeontap() {
+    pointlist = [];
+    LocationCubit cubit = LocationCubit.get(context);
+    cubit.cancelDirection();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,6 +21,10 @@ class LocationCubit extends Cubit<Locationstate> {
   DirectionModel? directionModel;
 
   LocationCubit() : super(LocationInitial());
+
+  static get(context) {
+    return BlocProvider.of<LocationCubit>(context);
+  }
 
   autocomplete(String value) async {
     print("*" * 50);
@@ -52,14 +57,14 @@ class LocationCubit extends Cubit<Locationstate> {
     }
   }
 
-  Future<void> getcurrentlocation(controller, String sheet) async {
+  Future<void> getcurrentlocation(controller, String scrollsheetype) async {
     try {
       emit(LocationLoading());
       Position currentposition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       LatLng currentlatlang =
           LatLng(currentposition.latitude, currentposition.longitude);
-      updatelatlang(currentlatlang, sheet);
+      updatelatlang(currentlatlang, scrollsheetype);
     } catch (e) {
       emit(Locationfiled(errmessage: e.toString()));
     }
@@ -103,7 +108,7 @@ class LocationCubit extends Cubit<Locationstate> {
         .animateCamera(CameraUpdate.newCameraPosition(currentcameraposition));
   }
 
-  updatelatlang(LatLng newlatlang, String? type) {
+  updatelatlang(LatLng? newlatlang, String? type) {
     if (type == "origin") {
       print("PickUp location update");
       pickuplatlng = newlatlang;
@@ -132,7 +137,7 @@ class LocationCubit extends Cubit<Locationstate> {
     final GoogleMapController newcontroller = await controller.future;
 
     await newcontroller.animateCamera(
-        CameraUpdate.newLatLngBounds(getboudries(pickup, destination), 30));
+        CameraUpdate.newLatLngBounds(getboudries(pickup, destination), 50));
   }
 
   getboudries(LatLng? pickup, LatLng? destination) {
@@ -145,5 +150,10 @@ class LocationCubit extends Cubit<Locationstate> {
           max(pickup.longitude, destination.longitude));
       return LatLngBounds(southwest: south, northeast: north);
     }
+  }
+
+  cancelDirection() {
+    pickuplatlng = null;
+    emit(LocationDirectionCanceled());
   }
 }
